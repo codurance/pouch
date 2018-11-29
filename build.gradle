@@ -22,7 +22,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	// implementation('org.springframework.boot:spring-boot-starter-jdbc')
@@ -30,3 +29,24 @@ dependencies {
 	runtimeOnly('org.postgresql:postgresql')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
+
+configurations {
+	acceptanceCompile.extendsFrom testCompile
+	acceptanceRuntime.extendsFrom testRuntime
+}
+
+sourceSets {
+	acceptance {
+		java.srcDir file("src/acceptance/java")
+		resources.srcDir     file("src/acceptance/resources")
+		compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.acceptanceCompile
+		runtimeClasspath = output + compileClasspath + configurations.acceptanceRuntime
+	}
+}
+
+task acceptanceTest(type: Test) {
+	testClassesDirs = sourceSets.acceptance.output.classesDirs
+	classpath = sourceSets.acceptance.runtimeClasspath
+}
+
+check.dependsOn acceptanceTest
