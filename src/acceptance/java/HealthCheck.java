@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.when;
+import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -22,6 +23,7 @@ class HealthCheck {
         when().get("/health")
                 .then()
                 .statusCode(200)
+                .contentType(JSON)
                 .body("status", equalTo("UP"));
     }
 }
