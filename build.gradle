@@ -20,7 +20,6 @@ apply plugin: 'com.github.johnrengelman.shadow'
 group = 'io.codurance'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
-targetCompatibility = 11
 
 repositories {
 	mavenCentral()
@@ -51,6 +50,13 @@ bootJar {
 	baseName = 'pouch'
 	classifier = null
 	version = null
+}
+
+tasks.withType(JavaCompile) {
+	//enable compilation in a separate daemon process
+	options.fork = true
+	sourceCompatibility = 11
+	sourceCompatibility = 11
 }
 
 configurations {
