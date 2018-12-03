@@ -40,9 +40,14 @@ dependencies {
 	testCompile('org.assertj:assertj-core:3.11.1')
 }
 
-// Output to build/libs/baseName.jar
 shadowJar {
 	baseName = 'uber-pouch'
+	classifier = null
+	version = null
+}
+
+bootJar {
+	baseName = 'pouch'
 	classifier = null
 	version = null
 }
