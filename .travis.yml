@@ -1,13 +1,18 @@
 language: java
 jdk: openjdk11
 install:
-  - ./gradlew assemble
+- "./gradlew assemble"
 script:
-  - ./gradlew check
+- "./gradlew check"
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+deploy:
+  provider: heroku
+  api_key:
+    secure: KCorkuoUWfOPnQ9X8kjM4g1WNLsRxcV1clJiC/UTEcq6ONdR7ruf5BLZ0Ij5fPBkK3FgWVcixCX8v5p7W0EA+syCKaOT0I7y4wijq8BDNvc0yfE2XxtGP54ULVSaPD5+aixMsuBurPEkyConX/Q6CkejnsGemma580zwRqJMvs2K+iAXwrgEOs0qL7p2+7MW2cDIcvFaaAafbmeWjbJx7VhUfr1nzTFuJJVyupvsoF5JxdBUVI/llrHyuUwdDnU/ubUmlGw+/rp8KWpG7WNLinJ/iOv4K1sOHUbJoTLDbM/4/3zAgcMxWaxQoJN2q2vBRADaOPWQuBg67Wo67VXU036TCa/aCGAtTOGNSp9CUFoyHm0Xaw+FYeAlPp5yQih31MXBRbW6VxVQJvRbZepn3FAXgotX/LvDKlw7+Pm8SwgoZzSC+YvJ7WMKvB5iTn9aHgjwEkq0mo3t+Ac1LTOgno4Ks9v8QTf6Vww8pE3WEDSE5Bs9Dr02zFfZCV+3AUo3JWQz9Tfieu8zTeSdU63GByeWHpnfebzv5Ke+0htoqfeMOzLuuJX1AnTjNFlwOWFgs8Q3Vb/A7mrxxaPgLa8u3UmMDtoSem+3bWp0/262Lqv6DfuZVX+kLXbHQQ4HMgmH+HnLGMkVynq0SAXPMI8xIPBBZT3CfmAoRPyKzmMT7pU=
+  app: pouch-api
