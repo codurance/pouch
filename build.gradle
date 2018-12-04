@@ -52,13 +52,6 @@ bootJar {
 	version = null
 }
 
-tasks.withType(JavaCompile) {
-	//enable compilation in a separate daemon process
-	options.fork = true
-	sourceCompatibility = 11
-	sourceCompatibility = 11
-}
-
 configurations {
 	acceptanceCompile.extendsFrom testCompile
 	acceptanceRuntime.extendsFrom testRuntime
