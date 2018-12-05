@@ -1,0 +1,19 @@
+# Schematic to build Docker containers for project database
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:latest
+    container_name: pouch_db
+    restart: always
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: secret
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 8080:8080
