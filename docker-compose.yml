@@ -11,9 +11,11 @@ services:
     - 5432:5432
     environment:
       POSTGRES_PASSWORD: secret
+      POSTGRES_DB: pouch_database
 
   adminer:
     image: adminer
+    container_name: pouch_adminer
     restart: always
     ports:
-    - 8080:8080
+    - 8181:8080
