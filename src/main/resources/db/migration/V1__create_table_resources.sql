@@ -1,5 +1,6 @@
-CREATE TABLE resources (
-    added_on timestamp,
-    title varchar(200),
-    url text
+CREATE TABLE RESOURCES (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ADDED_ON TIMESTAMP,
+    TITLE VARCHAR(200),
+    URL TEXT
 );
