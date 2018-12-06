@@ -28,7 +28,7 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	// implementation('org.springframework.boot:spring-boot-starter-jdbc')
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.flywaydb:flyway-core')
 	runtimeOnly('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
