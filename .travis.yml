@@ -16,15 +16,16 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 
 install:
-  - docker-compose up -d
   - ./gradlew assemble
+
+before_script:
+- docker-compose up --build -d
 
 script:
   - ./gradlew check --info
 
 after_script:
-- docker-compose stop
-- docker-compose rm -f
+- docker-compose down
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
