@@ -30,7 +30,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-data-jdbc')
 	compile('org.flywaydb:flyway-core')
-	runtimeOnly('org.postgresql:postgresql')
+	compile('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('io.rest-assured:rest-assured:3.2.0')
 	testCompile('org.junit.jupiter:junit-jupiter-api:5.3.1')

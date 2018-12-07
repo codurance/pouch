@@ -16,7 +16,7 @@ class HealthCheck {
     private int serverPort;
 
     @Test
-    void returns_200_with_expected_health_check_token() {
+    void returns_200_with_expected_health_check_token_from_spring_actuator() {
 
         RestAssured.port = serverPort;
 
@@ -25,5 +25,17 @@ class HealthCheck {
                 .statusCode(200)
                 .contentType(JSON)
                 .body("status", equalTo("UP"));
+    }
+
+    @Test
+    void returns_200_with_expected_health_check_token_from_database() {
+
+        RestAssured.port = serverPort;
+
+        when().get("/healthcheck")
+                .then()
+                .statusCode(200)
+                .contentType(JSON)
+                .body("status", equalTo("OK"));
     }
 }
