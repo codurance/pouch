@@ -10,8 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PouchApiApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+//	@Test
+//	public void contextLoads() {
+//	}
 
 }
