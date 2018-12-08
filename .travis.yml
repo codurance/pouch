@@ -1,37 +1,13 @@
-# Instructions for Travis CI continuous integration service
-language: java
-
 jdk: openjdk11
 
-sudo: required
-
-services:
-- docker
-
-env:
-- DOCKER_COMPOSE_VERSION=3.1
-
-before_install:
-- sudo rm /usr/local/bin/docker-compose
-- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-- chmod +x docker-compose
-- sudo mv docker-compose /usr/local/bin
-
-install:
-  - ./gradlew assemble
+addons:
+  postgresql: "9.4"
 
 before_script:
-- docker-compose up --build -d
+  - psql -c 'create database pouch;' -U postgres
 
 script:
-  - ./gradlew check --info
-
-after_script:
-- docker-compose down
-
-before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - ./gradlew check build --stacktrace
 
 cache:
   directories:
