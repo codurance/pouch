@@ -12,6 +12,10 @@ buildscript {
 	}
 }
 
+plugins {
+	id "com.heroku.sdk.heroku-gradle" version "1.0.4"
+}
+
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
@@ -71,3 +75,7 @@ task acceptanceTest(type: Test) {
 }
 
 check.dependsOn acceptanceTest
+
+heroku {
+	appName = "pouch-api"
+}

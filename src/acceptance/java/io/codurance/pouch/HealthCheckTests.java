@@ -1,6 +1,6 @@
 package io.codurance.pouch;
 
-import io.restassured.RestAssured;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,17 +16,20 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class HealthCheckTests {
 
-	@LocalServerPort
-	private int serverPort;
+    @LocalServerPort
+    private int serverPort;
 
-	@Test
-	public void shouldPerformHealthCheck() {
-		RestAssured.port = serverPort;
+    @Before
+    public void setUp() {
+        RestAssuredConfiguration.configure(serverPort);
+    }
 
-		when().get("/healthcheck")
-				.then()
-				.statusCode(200)
-				.contentType(JSON)
-				.body("status", equalTo("OK"));
-	}
+    @Test
+    public void shouldPerformHealthCheck() {
+        when().get("/healthcheck")
+                .then()
+                .statusCode(200)
+                .contentType(JSON)
+                .body("status", equalTo("OK"));
+    }
 }
