@@ -6,6 +6,37 @@ class DatabaseHelper {
 
     private final Connection connection;
 
+    static final class Resource {
+
+        private final int id;
+        private final String added;
+        private final String title;
+        private final String url;
+
+        Resource(int id, String added, String title, String url) {
+            this.id = id;
+            this.added = added;
+            this.title = title;
+            this.url = url;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getAdded() {
+            return added;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
+
     DatabaseHelper(String jdbcUrl) {
         try {
             connection = DriverManager.getConnection(jdbcUrl, "postgres", "");
@@ -24,12 +55,12 @@ class DatabaseHelper {
         }
     }
 
-    void insertResource(int id, String added, String title, String url) {
+    void insertResource(Resource resource) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO RESOURCE (ID, ADDED, TITLE, URL) VALUES (?, ?, ?, ?)")) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(added));
-            preparedStatement.setString(3, title);
-            preparedStatement.setString(4, url);
+            preparedStatement.setInt(1, resource.getId());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(resource.getAdded()));
+            preparedStatement.setString(3, resource.getTitle());
+            preparedStatement.setString(4, resource.getUrl());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

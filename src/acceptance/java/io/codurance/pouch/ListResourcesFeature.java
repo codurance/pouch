@@ -38,21 +38,33 @@ public class ListResourcesFeature {
 
     @Test
     public void shouldListResources() throws JsonProcessingException, JSONException {
-        Resource resourceOne = new Resource(1, "2018-12-05 16:01:00.0", "Spring Data JDBC", "https://spring.io/projects/spring-data-jdbc");
-        Resource resourceTwo = new Resource(2, "2018-12-05 16:02:00.0", "SQL Fiddle", "http://sqlfiddle.com/");
-        Resource resourceThree = new Resource(3, "2018-12-05 16:03:00.0", "PostgreSQL: The world's most advanced open source database", "https://www.postgresql.org/");
+        var resourceOne = new DatabaseHelper.Resource(
+                1,
+                "2018-12-05 16:01:00.0",
+                "Spring Data JDBC",
+                "https://spring.io/projects/spring-data-jdbc");
+        var resourceTwo = new DatabaseHelper.Resource(
+                2,
+                "2018-12-05 16:02:00.0",
+                "SQL Fiddle",
+                "http://sqlfiddle.com/");
+        var resourceThree = new DatabaseHelper.Resource(
+                3,
+                "2018-12-05 16:03:00.0",
+                "PostgreSQL: The world's most advanced open source database",
+                "https://www.postgresql.org/");
 
-        databaseHelper.insertResource(resourceOne.getId(), resourceOne.getAdded(), resourceOne.getTitle(), resourceOne.getUrl());
-        databaseHelper.insertResource(resourceTwo.getId(), resourceTwo.getAdded(), resourceTwo.getTitle(), resourceTwo.getUrl());
-        databaseHelper.insertResource(resourceThree.getId(), resourceThree.getAdded(), resourceThree.getTitle(), resourceThree.getUrl());
+        databaseHelper.insertResource(resourceOne);
+        databaseHelper.insertResource(resourceTwo);
+        databaseHelper.insertResource(resourceThree);
 
-        String actual = when().get("/resources")
+        var actual = when().get("/resources")
                 .getBody()
                 .asString();
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        var objectMapper = new ObjectMapper();
 
-        String expected = objectMapper.writeValueAsString(asList(resourceOne, resourceTwo, resourceThree));
+        var expected = objectMapper.writeValueAsString(asList(resourceOne, resourceTwo, resourceThree));
 
         JSONAssert.assertEquals(expected, actual, false);
     }
