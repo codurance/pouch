@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
+
 @RestController
 public class HealthController {
 
@@ -18,6 +20,6 @@ public class HealthController {
 
         return healthRepository.findById(1)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(502).build());
+                .orElseGet(() -> ResponseEntity.status(SERVICE_UNAVAILABLE).build());
     }
 }

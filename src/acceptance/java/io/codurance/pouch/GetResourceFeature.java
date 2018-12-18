@@ -11,12 +11,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.when;
 import static io.restassured.http.ContentType.JSON;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyString;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ListResourcesFeature {
+public class GetResourceFeature {
 
     @LocalServerPort
     private int serverPort;
@@ -35,39 +37,30 @@ public class ListResourcesFeature {
     }
 
     @Test
-    public void shouldListResources() {
+    public void shouldGetOneResource() {
         var resourceOne = new DatabaseHelper.Resource(
                 1,
                 "2018-12-05 16:01:00.0",
                 "Spring Data JDBC",
                 "https://spring.io/projects/spring-data-jdbc");
-        var resourceTwo = new DatabaseHelper.Resource(
-                2,
-                "2018-12-05 16:02:00.0",
-                "SQL Fiddle",
-                "http://sqlfiddle.com/");
-        var resourceThree = new DatabaseHelper.Resource(
-                3,
-                "2018-12-05 16:03:00.0",
-                "PostgreSQL: The world's most advanced open source database",
-                "https://www.postgresql.org/");
 
         databaseHelper.insertResource(resourceOne);
-        databaseHelper.insertResource(resourceTwo);
-        databaseHelper.insertResource(resourceThree);
 
-        when().get("/resources")
+        when().get("/resources/1")
                 .then()
                 .statusCode(SC_OK)
                 .contentType(JSON)
-                .body("[0].added", equalTo("2018-12-05 16:01:00.0"))
-                .body("[0].title", equalTo("Spring Data JDBC"))
-                .body("[0].url", equalTo("https://spring.io/projects/spring-data-jdbc"))
-                .body("[1].added", equalTo("2018-12-05 16:02:00.0"))
-                .body("[1].title", equalTo("SQL Fiddle"))
-                .body("[1].url", equalTo("http://sqlfiddle.com/"))
-                .body("[2].added", equalTo("2018-12-05 16:03:00.0"))
-                .body("[2].title", equalTo("PostgreSQL: The world's most advanced open source database"))
-                .body("[2].url", equalTo("https://www.postgresql.org/"));
+                .body("id", equalTo(1))
+                .body("added", equalTo("2018-12-05 16:01:00.0"))
+                .body("title", equalTo("Spring Data JDBC"))
+                .body("url", equalTo("https://spring.io/projects/spring-data-jdbc"));
+    }
+
+    @Test
+    public void shouldProduceServerErrorForNonExistingResource() {
+        when().get("/resources/11")
+                .then()
+                .statusCode(SC_NOT_FOUND)
+                .body(isEmptyString());
     }
 }

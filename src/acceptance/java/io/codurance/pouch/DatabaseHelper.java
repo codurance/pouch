@@ -13,14 +13,14 @@ class DatabaseHelper {
         private final String title;
         private final String url;
 
-        Resource(int id, String added, String title, String url) {
+        Resource(Integer id, String added, String title, String url) {
             this.id = id;
             this.added = added;
             this.title = title;
             this.url = url;
         }
 
-        public int getId() {
+        public Integer getId() {
             return id;
         }
 
