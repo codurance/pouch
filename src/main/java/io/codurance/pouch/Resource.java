@@ -1,16 +1,26 @@
 package io.codurance.pouch;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
+
+import java.sql.Timestamp;
 
 public class Resource {
 
     @Id
-    private final Integer id;
-    private final String added;
-    private final String title;
-    private final String url;
+    private Integer id;
 
-    Resource(Integer id, String added, String title, String url) {
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.S")
+    private Timestamp added;
+
+    private String title;
+    private String url;
+
+    public Resource() {
+        // default constructor needed for JSON deserialization
+    }
+
+    Resource(Integer id, Timestamp added, String title, String url) {
         this.id = id;
         this.added = added;
         this.title = title;
@@ -21,7 +31,7 @@ public class Resource {
         return id;
     }
 
-    public String getAdded() {
+    public Timestamp getAdded() {
         return added;
     }
 
@@ -53,5 +63,15 @@ public class Resource {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "id=" + id +
+                ", added=" + added +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }
