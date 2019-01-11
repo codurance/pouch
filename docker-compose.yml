@@ -11,10 +11,3 @@ services:
     - 5432:5432
     environment:
       POSTGRES_DB: pouch
-
-  adminer:
-    image: adminer
-    container_name: pouch_adminer
-    restart: always
-    ports:
-    - 8181:8080
