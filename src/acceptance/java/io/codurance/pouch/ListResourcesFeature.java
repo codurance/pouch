@@ -9,8 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
+
 import static io.restassured.RestAssured.when;
 import static io.restassured.http.ContentType.JSON;
+import static java.time.Instant.now;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -36,19 +40,23 @@ public class ListResourcesFeature {
 
     @Test
     public void shouldListResources() {
+        var currentTimestamp = now();
+        UUID randomUuidOne = randomUUID();
         var resourceOne = new DatabaseHelper.Resource(
-                1,
-                "2018-12-05 16:01:00.0",
+                randomUuidOne,
+                currentTimestamp,
                 "Spring Data JDBC",
                 "https://spring.io/projects/spring-data-jdbc");
+        UUID randomUuidTwo = randomUUID();
         var resourceTwo = new DatabaseHelper.Resource(
-                2,
-                "2018-12-05 16:02:00.0",
+                randomUuidTwo,
+                currentTimestamp,
                 "SQL Fiddle",
                 "http://sqlfiddle.com/");
+        UUID randomUuidThree = randomUUID();
         var resourceThree = new DatabaseHelper.Resource(
-                3,
-                "2018-12-05 16:03:00.0",
+                randomUuidThree,
+                currentTimestamp,
                 "PostgreSQL: The world's most advanced open source database",
                 "https://www.postgresql.org/");
 
@@ -60,13 +68,16 @@ public class ListResourcesFeature {
                 .then()
                 .statusCode(SC_OK)
                 .contentType(JSON)
-                .body("[0].added", equalTo("2018-12-05 16:01:00.0"))
+                .body("[0].id", equalTo(randomUuidOne.toString()))
+                .body("[0].added", equalTo(currentTimestamp.toString()))
                 .body("[0].title", equalTo("Spring Data JDBC"))
                 .body("[0].url", equalTo("https://spring.io/projects/spring-data-jdbc"))
-                .body("[1].added", equalTo("2018-12-05 16:02:00.0"))
+                .body("[1].id", equalTo(randomUuidTwo.toString()))
+                .body("[1].added", equalTo(currentTimestamp.toString()))
                 .body("[1].title", equalTo("SQL Fiddle"))
                 .body("[1].url", equalTo("http://sqlfiddle.com/"))
-                .body("[2].added", equalTo("2018-12-05 16:03:00.0"))
+                .body("[2].id", equalTo(randomUuidThree.toString()))
+                .body("[2].added", equalTo(currentTimestamp.toString()))
                 .body("[2].title", equalTo("PostgreSQL: The world's most advanced open source database"))
                 .body("[2].url", equalTo("https://www.postgresql.org/"));
     }

@@ -1,6 +1,8 @@
 package io.codurance.pouch;
 
 import java.sql.*;
+import java.time.Instant;
+import java.util.UUID;
 
 class DatabaseHelper {
 
@@ -8,23 +10,23 @@ class DatabaseHelper {
 
     static final class Resource {
 
-        private final int id;
-        private final String added;
+        private final UUID id;
+        private final Instant added;
         private final String title;
         private final String url;
 
-        Resource(Integer id, String added, String title, String url) {
+        Resource(UUID id, Instant added, String title, String url) {
             this.id = id;
             this.added = added;
             this.title = title;
             this.url = url;
         }
 
-        public Integer getId() {
+        public UUID getId() {
             return id;
         }
 
-        public String getAdded() {
+        public Instant getAdded() {
             return added;
         }
 
@@ -48,7 +50,8 @@ class DatabaseHelper {
 
     void clearResources() {
         try (Statement statement = connection.createStatement()) {
-            statement.execute("DELETE FROM RESOURCE");
+            String sql = "DELETE FROM RESOURCE";
+            statement.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -56,9 +59,10 @@ class DatabaseHelper {
     }
 
     void insertResource(Resource resource) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO RESOURCE (ID, ADDED, TITLE, URL) VALUES (?, ?, ?, ?)")) {
-            preparedStatement.setInt(1, resource.getId());
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(resource.getAdded()));
+        String sql = "INSERT INTO RESOURCE (ID, ADDED, TITLE, URL) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, resource.getId());
+            preparedStatement.setTimestamp(2, Timestamp.from(resource.getAdded()));
             preparedStatement.setString(3, resource.getTitle());
             preparedStatement.setString(4, resource.getUrl());
             preparedStatement.execute();

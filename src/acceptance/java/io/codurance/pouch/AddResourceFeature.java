@@ -16,6 +16,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,10 +40,10 @@ public class AddResourceFeature {
 
     @Test
     public void shouldAddOneResource() {
-        Map<String, String> resourceToAdd = new HashMap<>();
-        resourceToAdd.put("added", "2018-12-18 12:30:00.0");
-        resourceToAdd.put("title", "Stack Overflow - Where Developers Learn, Share, & Build Careers");
-        resourceToAdd.put("url", "https://stackoverflow.com");
+        Map<String, String> resourceToAdd = new HashMap<>(){{
+            put("title", "Stack Overflow - Where Developers Learn, Share, & Build Careers");
+            put("url", "https://stackoverflow.com");
+        }};
 
         given().contentType(JSON)
                 .body(resourceToAdd)
@@ -50,7 +51,7 @@ public class AddResourceFeature {
                 .post("/resources")
                 .peek()
                 .then()
-                .body("added", equalTo("2018-12-18 12:30:00.0"))
+                .body("added", notNullValue())
                 .body("title", equalTo("Stack Overflow - Where Developers Learn, Share, & Build Careers"))
                 .body("url", equalTo("https://stackoverflow.com"))
                 .statusCode(SC_CREATED);

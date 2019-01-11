@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.when;
 import static io.restassured.http.ContentType.JSON;
+import static java.time.Instant.now;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
@@ -38,27 +40,30 @@ public class GetResourceFeature {
 
     @Test
     public void shouldGetOneResource() {
+        var randomUUID = randomUUID();
+        var currentTimestamp = now();
         var resourceOne = new DatabaseHelper.Resource(
-                1,
-                "2018-12-05 16:01:00.0",
+                randomUUID,
+                currentTimestamp,
                 "Spring Data JDBC",
                 "https://spring.io/projects/spring-data-jdbc");
 
         databaseHelper.insertResource(resourceOne);
 
-        when().get("/resources/1")
+        when().get("/resources/" + randomUUID.toString())
                 .then()
                 .statusCode(SC_OK)
                 .contentType(JSON)
-                .body("id", equalTo(1))
-                .body("added", equalTo("2018-12-05 16:01:00.0"))
+                .body("id", equalTo(randomUUID.toString()))
+                .body("added", equalTo(currentTimestamp.toString()))
                 .body("title", equalTo("Spring Data JDBC"))
                 .body("url", equalTo("https://spring.io/projects/spring-data-jdbc"));
     }
 
     @Test
     public void shouldProduceServerErrorForNonExistingResource() {
-        when().get("/resources/11")
+        var randomUUID = randomUUID();
+        when().get("/resources/" + randomUUID.toString())
                 .then()
                 .statusCode(SC_NOT_FOUND)
                 .body(isEmptyString());

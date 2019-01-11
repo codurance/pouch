@@ -1,17 +1,17 @@
 package io.codurance.pouch;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
-public class Resource {
+public class Resource implements Persistable {
 
     @Id
-    private Integer id;
+    private UUID id;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.S")
-    private Timestamp added;
+    private Instant added;
 
     private String title;
     private String url;
@@ -20,18 +20,22 @@ public class Resource {
         // default constructor needed for JSON deserialization
     }
 
-    Resource(Integer id, Timestamp added, String title, String url) {
+    Resource(UUID id, Instant added, String title, String url) {
         this.id = id;
         this.added = added;
         this.title = title;
         this.url = url;
     }
 
-    public Integer getId() {
+    public static Resource of(ResourceDTO resourceDTO) {
+        return new Resource(UUID.randomUUID(), Instant.now(), resourceDTO.getTitle(), resourceDTO.getUrl());
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public Timestamp getAdded() {
+    public Instant getAdded() {
         return added;
     }
 
@@ -41,6 +45,11 @@ public class Resource {
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public boolean isNew() {
+        return true;
     }
 
     @Override
