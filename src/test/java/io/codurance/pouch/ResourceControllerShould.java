@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.time.Instant.*;
 import static java.util.Arrays.asList;
@@ -16,6 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.valueOf;
 
@@ -79,5 +81,14 @@ class ResourceControllerShould {
 
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_CREATED)));
         assertThat(responseEntity.getBody(), is(resource));
+    }
+
+    @Test
+    void delete_one_specified_resource() {
+        var randomUUID = randomUUID();
+
+        resourceController.remove(randomUUID);
+
+        verify(resourceRepository).deleteById(randomUUID);
     }
 }

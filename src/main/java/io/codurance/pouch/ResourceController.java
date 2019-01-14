@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 class ResourceController {
@@ -36,5 +37,11 @@ class ResourceController {
     ResponseEntity<Resource> add(@RequestBody ResourceDTO input) {
         var resource = resourceRepository.save(Resource.of(input));
         return new ResponseEntity<>(resource, CREATED);
+    }
+
+    @DeleteMapping("/resources/{id}")
+    ResponseEntity<Resource> remove(@PathVariable UUID id) {
+        resourceRepository.deleteById(id);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }
