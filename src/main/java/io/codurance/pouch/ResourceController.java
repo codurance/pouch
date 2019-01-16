@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 class ResourceController {
@@ -35,7 +35,7 @@ class ResourceController {
 
     @PostMapping("/resources")
     ResponseEntity<Resource> add(@RequestBody ResourceDTO input) {
-        var resource = resourceRepository.save(Resource.of(input));
+        var resource = resourceRepository.save(createResourceFrom(input));
         return new ResponseEntity<>(resource, CREATED);
     }
 
@@ -43,5 +43,28 @@ class ResourceController {
     ResponseEntity<Resource> remove(@PathVariable UUID id) {
         resourceRepository.deleteById(id);
         return ResponseEntity.status(NO_CONTENT).build();
+    }
+
+    @PutMapping("/resources/{id}")
+    ResponseEntity<Resource> updateById(@PathVariable UUID id, @RequestBody ResourceDTO input) {
+        Optional<Resource> targetResource = resourceRepository.findById(id);
+        if (!targetResource.isPresent()) {
+            return ResponseEntity.status(NOT_FOUND).build();
+        }
+
+        var resourceToUpdate = targetResource.get();
+        updateResourceFrom(resourceToUpdate, input);
+
+        var resource = resourceRepository.save(resourceToUpdate);
+        return new ResponseEntity<>(resource, OK);
+    }
+
+    private void updateResourceFrom(Resource resourceToUpdate, @RequestBody ResourceDTO input) {
+        resourceToUpdate.setTitle(input.getTitle());
+        resourceToUpdate.setUrl(input.getUrl());
+    }
+
+    private Resource createResourceFrom(ResourceDTO resourceDTO) {
+        return new Resource(UUID.randomUUID(), Instant.now(), resourceDTO.getTitle(), resourceDTO.getUrl());
     }
 }

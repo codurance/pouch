@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.time.Instant.*;
 import static java.util.Arrays.asList;
@@ -90,5 +89,32 @@ class ResourceControllerShould {
         resourceController.remove(randomUUID);
 
         verify(resourceRepository).deleteById(randomUUID);
+    }
+
+    @Test
+    void update_one_specified_resource() {
+        var randomUUID = randomUUID();
+        var currentTimestamp = now();
+        var input = new ResourceDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
+        var resource = new Resource(randomUUID, currentTimestamp, "Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com");
+        when(resourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
+        when(resourceRepository.save(any(Resource.class))).thenReturn(resource);
+
+        var responseEntity = resourceController.updateById(randomUUID, input);
+
+        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
+        assertThat(responseEntity.getBody(), is(resource));
+    }
+
+    @Test
+    void on_update_return_empty_body_for_non_existing_specified_resource() {
+        var randomUUID = randomUUID();
+        var input = new ResourceDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
+        when(resourceRepository.findById(randomUUID)).thenReturn(Optional.empty());
+
+        var responseEntity = resourceController.updateById(randomUUID, input);
+
+        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_NOT_FOUND)));
+        assertThat(responseEntity.getBody(), nullValue());
     }
 }

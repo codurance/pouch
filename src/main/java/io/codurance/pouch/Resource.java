@@ -1,12 +1,11 @@
 package io.codurance.pouch;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public class Resource implements Persistable {
+public class Resource {
 
     @Id
     private UUID id;
@@ -27,10 +26,6 @@ public class Resource implements Persistable {
         this.url = url;
     }
 
-    public static Resource of(ResourceDTO resourceDTO) {
-        return new Resource(UUID.randomUUID(), Instant.now(), resourceDTO.getTitle(), resourceDTO.getUrl());
-    }
-
     public UUID getId() {
         return id;
     }
@@ -47,9 +42,12 @@ public class Resource implements Persistable {
         return url;
     }
 
-    @Override
-    public boolean isNew() {
-        return true;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
