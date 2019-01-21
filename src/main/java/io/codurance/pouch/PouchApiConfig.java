@@ -2,6 +2,8 @@ package io.codurance.pouch;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
@@ -15,7 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJdbcRepositories
-public class HealthConfig extends JdbcConfiguration {
+public class PouchApiConfig extends JdbcConfiguration {
 
     @Bean
     NamedParameterJdbcOperations operations() {
@@ -31,5 +33,11 @@ public class HealthConfig extends JdbcConfiguration {
     @ConfigurationProperties(prefix="spring.datasource")
     DataSource dataSource(){
         return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
+    webServerFactoryCustomizer() {
+        return factory -> factory.setContextPath("/api");
     }
 }

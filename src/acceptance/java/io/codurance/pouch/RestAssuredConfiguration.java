@@ -12,6 +12,12 @@ class RestAssuredConfiguration {
             RestAssured.port = Integer.valueOf(port);
         }
 
+        String basePath = System.getProperty("server.base");
+        if(basePath==null){
+            basePath = "/api/";
+        }
+        RestAssured.basePath = basePath;
+
         String baseHost = System.getProperty("server.host");
         if (baseHost == null) {
             baseHost = "http://localhost";
