@@ -70,7 +70,7 @@ public class UpdateResourceFeature {
     }
 
     @Test
-    public void shouldProduceServerErrorForNonExistingResource() {
+    public void shouldProduceClientErrorForNonExistingResource() {
         var randomUUID = randomUUID();
 
         Map<String, String> updatedResourceData = new HashMap<>(){{

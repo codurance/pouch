@@ -14,6 +14,7 @@ class DatabaseHelper {
         private final Instant added;
         private final String title;
         private final String url;
+        private boolean favourite;
 
         Resource(UUID id, Instant added, String title, String url) {
             this.id = id;
@@ -36,6 +37,14 @@ class DatabaseHelper {
 
         public String getUrl() {
             return url;
+        }
+
+        public boolean isFavourite() {
+            return favourite;
+        }
+
+        public void setFavourite(boolean favouriteStatus) {
+            this.favourite = favouriteStatus;
         }
     }
 

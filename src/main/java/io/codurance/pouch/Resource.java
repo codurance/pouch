@@ -15,6 +15,8 @@ public class Resource {
     private String title;
     private String url;
 
+    private boolean favourite;
+
     public Resource() {
         // default constructor needed for JSON deserialization
     }
@@ -42,12 +44,20 @@ public class Resource {
         return url;
     }
 
+    public boolean isFavourite() {
+        return favourite;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setFavourite(boolean favouriteStatus) {
+        this.favourite = favouriteStatus;
     }
 
     @Override
