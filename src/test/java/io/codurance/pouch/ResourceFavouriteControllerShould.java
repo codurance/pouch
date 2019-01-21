@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -18,13 +19,13 @@ import static org.springframework.http.HttpStatus.valueOf;
 
 class ResourceFavouriteControllerShould {
 
-    private ResourceRepository ResourceRepository;
+    private ResourceRepository resourceRepository;
     private ResourceFavouriteController resourceFavouriteController;
 
     @BeforeEach
     void setUp() {
-        ResourceRepository = mock(ResourceRepository.class);
-        resourceFavouriteController = new ResourceFavouriteController(ResourceRepository);
+        resourceRepository = mock(ResourceRepository.class);
+        resourceFavouriteController = new ResourceFavouriteController(resourceRepository);
     }
 
     @Test
@@ -32,13 +33,11 @@ class ResourceFavouriteControllerShould {
         var randomUUID = randomUUID();
         var currentTimestamp = now();
         var resource = new Resource(randomUUID, currentTimestamp, "GitHub", "https://github.com");
-        when(ResourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
-        when(ResourceRepository.save(any(Resource.class))).thenReturn(resource);
+        when(resourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
+        when(resourceRepository.save(any(Resource.class))).thenReturn(resource);
 
         var responseEntity = resourceFavouriteController.addFavouriteById(randomUUID);
 
-        verify(ResourceRepository).findById(randomUUID);
-        verify(ResourceRepository).save(resource);
         assertThat(resource.isFavourite(), is(true));
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
     }
@@ -48,15 +47,13 @@ class ResourceFavouriteControllerShould {
         var randomUUID = randomUUID();
         var currentTimestamp = now();
         var resource = new Resource(randomUUID, currentTimestamp, "GitHub", "https://github.com");
-        resource.setFavourite(true);
-        when(ResourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
-        when(ResourceRepository.save(any(Resource.class))).thenReturn(resource);
+        resource.setAsFavourite();
+        when(resourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
+        when(resourceRepository.save(any(Resource.class))).thenReturn(resource);
 
         var responseEntity = resourceFavouriteController.removeFavouriteById(randomUUID);
 
-        verify(ResourceRepository).findById(randomUUID);
-        verify(ResourceRepository).save(resource);
         assertThat(resource.isFavourite(), is(false));
-        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
+        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_NO_CONTENT)));
     }
 }

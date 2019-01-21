@@ -12,8 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static io.restassured.RestAssured.when;
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.isEmptyString;
 
 @RunWith(SpringRunner.class)
@@ -63,12 +62,12 @@ public class FavouriteStatusFeature {
                 "Hacker Noon",
                 "https://hackernoon.com/");
 
-        resourceToFavourite.setFavourite(true);
+        resourceToFavourite.setAsFavourite();
         databaseHelper.insertResource(resourceToFavourite);
 
         when().delete("/resources/" + randomUUID.toString() + "/favourite")
                 .then()
-                .statusCode(SC_OK);
+                .statusCode(SC_NO_CONTENT);
     }
 
     @Test
@@ -77,8 +76,7 @@ public class FavouriteStatusFeature {
 
         when().put("/resources/" + randomUUID.toString() + "/favourite")
                 .then()
-                .statusCode(SC_NOT_FOUND)
-                .body(isEmptyString());
+                .statusCode(SC_NOT_FOUND);
     }
 
     @Test
@@ -87,7 +85,6 @@ public class FavouriteStatusFeature {
 
         when().delete("/resources/" + randomUUID.toString() + "/favourite")
                 .then()
-                .statusCode(SC_NOT_FOUND)
-                .body(isEmptyString());
+                .statusCode(SC_NOT_FOUND);
     }
 }

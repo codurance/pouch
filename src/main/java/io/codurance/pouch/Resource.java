@@ -26,6 +26,7 @@ public class Resource {
         this.added = added;
         this.title = title;
         this.url = url;
+        this.favourite = false;
     }
 
     public UUID getId() {
@@ -56,8 +57,12 @@ public class Resource {
         this.url = url;
     }
 
-    public void setFavourite(boolean favouriteStatus) {
-        this.favourite = favouriteStatus;
+    public void setAsFavourite() {
+        this.favourite = true;
+    }
+
+    public void removeFavourite() {
+        this.favourite = false;
     }
 
     @Override
