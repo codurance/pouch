@@ -8,9 +8,7 @@ import java.util.Optional;
 import static java.time.Instant.*;
 import static java.util.Arrays.asList;
 import static java.util.UUID.*;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -40,8 +38,12 @@ class ResourceControllerShould {
                 new Resource(randomUUID, currentTimestamp, "SQL Fiddle", "http://sqlfiddle.com/"),
                 new Resource(randomUUID, currentTimestamp, "PostgreSQL: The world''s most advanced open source database", "https://www.postgresql.org/"));
         when(resourceRepository.findAll()).thenReturn(resourceList);
+        var responseList = asList(
+                new ResourceResponseDTO(randomUUID, currentTimestamp, "Spring Data JDBC", "https://spring.io/projects/spring-data-jdbc", false),
+                new ResourceResponseDTO(randomUUID, currentTimestamp, "SQL Fiddle", "http://sqlfiddle.com/", false),
+                new ResourceResponseDTO(randomUUID, currentTimestamp, "PostgreSQL: The world''s most advanced open source database", "https://www.postgresql.org/", false));
 
-        assertThat(resourceController.listAll(), is(resourceList));
+        assertThat(resourceController.listAll(), is(responseList));
     }
 
     @Test
@@ -50,11 +52,12 @@ class ResourceControllerShould {
         var currentTimestamp = now();
         var resource = new Resource(randomUUID, currentTimestamp, "Spring Data JDBC", "https://spring.io/projects/spring-data-jdbc");
         when(resourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
+        var response = new ResourceResponseDTO(randomUUID, currentTimestamp, "Spring Data JDBC", "https://spring.io/projects/spring-data-jdbc", false);
 
         var responseEntity = resourceController.getById(randomUUID);
 
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
-        assertThat(responseEntity.getBody(), is(resource));
+        assertThat(responseEntity.getBody(), is(response));
     }
 
     @Test
@@ -72,44 +75,47 @@ class ResourceControllerShould {
     void return_newly_added_resource() {
         var randomUUID = randomUUID();
         var currentTimestamp = now();
-        var input = new ResourceDTO("Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com");
+        var input = new ResourceRequestDTO("Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com");
         var resource = new Resource(randomUUID, currentTimestamp, "Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com");
         when(resourceRepository.save(any(Resource.class))).thenReturn(resource);
+        var response = new ResourceResponseDTO(randomUUID, currentTimestamp, "Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com", false);
 
         var responseEntity = resourceController.add(input);
 
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_CREATED)));
-        assertThat(responseEntity.getBody(), is(resource));
+        assertThat(responseEntity.getBody(), is(response));
     }
 
     @Test
     void delete_one_specified_resource() {
         var randomUUID = randomUUID();
 
-        resourceController.remove(randomUUID);
+        var responseEntity = resourceController.remove(randomUUID);
 
         verify(resourceRepository).deleteById(randomUUID);
+        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_NO_CONTENT)));
     }
 
     @Test
     void update_one_specified_resource() {
         var randomUUID = randomUUID();
         var currentTimestamp = now();
-        var input = new ResourceDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
+        var input = new ResourceRequestDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
         var resource = new Resource(randomUUID, currentTimestamp, "Baeldung | Java, Spring and Web Development tutorials", "https://www.baeldung.com");
         when(resourceRepository.findById(randomUUID)).thenReturn(Optional.of(resource));
         when(resourceRepository.save(any(Resource.class))).thenReturn(resource);
+        var response = new ResourceResponseDTO(randomUUID, currentTimestamp, "JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/", false);
 
         var responseEntity = resourceController.updateById(randomUUID, input);
 
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
-        assertThat(responseEntity.getBody(), is(resource));
+        assertThat(responseEntity.getBody(), is(response));
     }
 
     @Test
     void on_update_return_empty_body_for_non_existing_specified_resource() {
         var randomUUID = randomUUID();
-        var input = new ResourceDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
+        var input = new ResourceRequestDTO("JetBrains: Developer Tools for Professionals and Teams", "https://www.jetbrains.com/");
         when(resourceRepository.findById(randomUUID)).thenReturn(Optional.empty());
 
         var responseEntity = resourceController.updateById(randomUUID, input);

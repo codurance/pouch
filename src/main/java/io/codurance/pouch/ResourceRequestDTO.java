@@ -1,15 +1,15 @@
 package io.codurance.pouch;
 
-public class ResourceDTO {
+public class ResourceRequestDTO {
 
     private String title;
     private String url;
 
-    public ResourceDTO() {
+    public ResourceRequestDTO() {
         // default constructor needed for JSON deserialization
     }
 
-    public ResourceDTO(String title, String url) {
+    public ResourceRequestDTO(String title, String url) {
         this.title = title;
         this.url = url;
     }
@@ -27,7 +27,7 @@ public class ResourceDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ResourceDTO that = (ResourceDTO) o;
+        ResourceRequestDTO that = (ResourceRequestDTO) o;
 
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         return url != null ? url.equals(that.url) : that.url == null;
@@ -42,7 +42,7 @@ public class ResourceDTO {
 
     @Override
     public String toString() {
-        return "ResourceDTO{" +
+        return "ResourceRequestDTO{" +
                 "title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 '}';

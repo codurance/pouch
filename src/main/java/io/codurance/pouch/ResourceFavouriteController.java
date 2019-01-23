@@ -23,7 +23,7 @@ class ResourceFavouriteController {
     }
 
     @PutMapping("/resources/{id}/favourite")
-    ResponseEntity<Resource> addFavouriteById(@PathVariable UUID id) {
+    ResponseEntity<ResourceResponseDTO> addFavouriteById(@PathVariable UUID id) {
         Optional<Resource> targetResource = resourceRepository.findById(id);
         if (!targetResource.isPresent()) {
             return ResponseEntity.status(NOT_FOUND).build();
@@ -39,7 +39,7 @@ class ResourceFavouriteController {
     }
 
     @DeleteMapping("/resources/{id}/favourite")
-    ResponseEntity<Resource> removeFavouriteById(@PathVariable UUID id) {
+    ResponseEntity<ResourceResponseDTO> removeFavouriteById(@PathVariable UUID id) {
         Optional<Resource> targetResource = resourceRepository.findById(id);
         if (!targetResource.isPresent()) {
             return ResponseEntity.status(NOT_FOUND).build();

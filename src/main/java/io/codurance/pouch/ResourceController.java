@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -21,32 +23,36 @@ class ResourceController {
     }
 
     @GetMapping("/resources")
-    Iterable<Resource> listAll() {
-        return resourceRepository.findAll();
+    Iterable<ResourceResponseDTO> listAll() {
+        Iterable<Resource> allResources = resourceRepository.findAll();
+        return StreamSupport.stream(allResources.spliterator(), false)
+                .map(ResourceResponseDTO::createResponseDTOFrom)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/resources/{id}")
     @ResponseBody
-    ResponseEntity<Resource> getById(@PathVariable UUID id) {
+    ResponseEntity<ResourceResponseDTO> getById(@PathVariable UUID id) {
         return resourceRepository.findById(id)
-                .map(ResponseEntity::ok)
+                .map(resource -> ResponseEntity.ok(ResourceResponseDTO.createResponseDTOFrom(resource)))
                 .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
     @PostMapping("/resources")
-    ResponseEntity<Resource> add(@RequestBody ResourceDTO input) {
+    ResponseEntity<ResourceResponseDTO> add(@RequestBody ResourceRequestDTO input) {
         var resource = resourceRepository.save(createResourceFrom(input));
-        return new ResponseEntity<>(resource, CREATED);
+        var response = ResourceResponseDTO.createResponseDTOFrom(resource);
+        return new ResponseEntity<>(response, CREATED);
     }
 
     @DeleteMapping("/resources/{id}")
-    ResponseEntity<Resource> remove(@PathVariable UUID id) {
+    ResponseEntity<ResourceResponseDTO> remove(@PathVariable UUID id) {
         resourceRepository.deleteById(id);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @PutMapping("/resources/{id}")
-    ResponseEntity<Resource> updateById(@PathVariable UUID id, @RequestBody ResourceDTO input) {
+    ResponseEntity<ResourceResponseDTO> updateById(@PathVariable UUID id, @RequestBody ResourceRequestDTO input) {
         Optional<Resource> targetResource = resourceRepository.findById(id);
         if (!targetResource.isPresent()) {
             return ResponseEntity.status(NOT_FOUND).build();
@@ -56,15 +62,16 @@ class ResourceController {
         updateResourceFrom(resourceToUpdate, input);
 
         var resource = resourceRepository.save(resourceToUpdate);
-        return new ResponseEntity<>(resource, OK);
+        var response = ResourceResponseDTO.createResponseDTOFrom(resource);
+        return new ResponseEntity<>(response, OK);
     }
 
-    private void updateResourceFrom(Resource resourceToUpdate, @RequestBody ResourceDTO input) {
+    private void updateResourceFrom(Resource resourceToUpdate, @RequestBody ResourceRequestDTO input) {
         resourceToUpdate.setTitle(input.getTitle());
         resourceToUpdate.setUrl(input.getUrl());
     }
 
-    private Resource createResourceFrom(ResourceDTO resourceDTO) {
-        return new Resource(UUID.randomUUID(), Instant.now(), resourceDTO.getTitle(), resourceDTO.getUrl());
+    private Resource createResourceFrom(ResourceRequestDTO resourceRequestDTO) {
+        return new Resource(UUID.randomUUID(), Instant.now(), resourceRequestDTO.getTitle(), resourceRequestDTO.getUrl());
     }
 }
