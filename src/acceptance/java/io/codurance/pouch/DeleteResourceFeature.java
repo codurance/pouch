@@ -8,11 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 import static io.restassured.RestAssured.when;
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,5 +54,7 @@ public class DeleteResourceFeature {
                 .then()
                 .statusCode(SC_NO_CONTENT)
                 .body(isEmptyString());
+
+        assertThat(databaseHelper.readResource(randomUUID), is(Optional.empty()));
     }
 }

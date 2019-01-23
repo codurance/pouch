@@ -35,7 +35,7 @@ class ResourceFavouriteController {
         }
 
         resourceRepository.save(resourceToFavourite);
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @DeleteMapping("/resources/{id}/favourite")

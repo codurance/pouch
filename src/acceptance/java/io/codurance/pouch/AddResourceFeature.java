@@ -11,12 +11,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -45,7 +48,8 @@ public class AddResourceFeature {
             put("url", "https://stackoverflow.com");
         }};
 
-        given().contentType(JSON)
+        var response = given()
+                .contentType(JSON)
                 .body(resourceToAdd)
                 .when()
                 .post("/resources")
@@ -54,6 +58,11 @@ public class AddResourceFeature {
                 .body("added", notNullValue())
                 .body("title", equalTo("Stack Overflow - Where Developers Learn, Share, & Build Careers"))
                 .body("url", equalTo("https://stackoverflow.com"))
-                .statusCode(SC_CREATED);
+                .statusCode(SC_CREATED)
+                .extract()
+                .response();
+
+        var resource = response.getBody().as(DatabaseHelper.Resource.class);
+        assertThat(databaseHelper.readResource(resource.getId()), is(Optional.of(resource)));
     }
 }

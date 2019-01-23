@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -72,6 +73,6 @@ class ResourceController {
     }
 
     private Resource createResourceFrom(ResourceRequestDTO resourceRequestDTO) {
-        return new Resource(UUID.randomUUID(), Instant.now(), resourceRequestDTO.getTitle(), resourceRequestDTO.getUrl());
+        return new Resource(UUID.randomUUID(), Instant.now().truncatedTo(ChronoUnit.MILLIS), resourceRequestDTO.getTitle(), resourceRequestDTO.getUrl());
     }
 }

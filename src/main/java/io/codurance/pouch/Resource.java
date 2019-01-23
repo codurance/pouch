@@ -1,36 +1,31 @@
 package io.codurance.pouch;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public class Resource {
-
-    @Id
-    private UUID id;
+public class Resource extends Entity {
 
     private Instant added;
-
     private String title;
     private String url;
-
     private boolean favourite;
 
     public Resource() {
         // default constructor needed for JSON deserialization
+        super();
     }
 
     Resource(UUID id, Instant added, String title, String url) {
-        this.id = id;
+        super(id);
         this.added = added;
         this.title = title;
         this.url = url;
         this.favourite = false;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public Instant getAdded() {
@@ -72,7 +67,7 @@ public class Resource {
 
         Resource resource = (Resource) o;
 
-        if (id != null ? !id.equals(resource.id) : resource.id != null) return false;
+        if (favourite != resource.favourite) return false;
         if (added != null ? !added.equals(resource.added) : resource.added != null) return false;
         if (title != null ? !title.equals(resource.title) : resource.title != null) return false;
         return url != null ? url.equals(resource.url) : resource.url == null;
@@ -80,20 +75,20 @@ public class Resource {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (added != null ? added.hashCode() : 0);
+        int result = added != null ? added.hashCode() : 0;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (favourite ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Resource{" +
-                "id=" + id +
-                ", added=" + added +
+                "added=" + added +
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
+                ", favourite=" + favourite +
                 '}';
     }
 }

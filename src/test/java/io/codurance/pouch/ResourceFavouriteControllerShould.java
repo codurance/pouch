@@ -39,7 +39,7 @@ class ResourceFavouriteControllerShould {
         var responseEntity = resourceFavouriteController.addFavouriteById(randomUUID);
 
         assertThat(resource.isFavourite(), is(true));
-        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_OK)));
+        assertThat(responseEntity.getStatusCode(), is(valueOf(SC_NO_CONTENT)));
     }
 
     @Test
