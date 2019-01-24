@@ -1,5 +1,7 @@
-package io.codurance.pouch;
+package io.codurance.pouch.features;
 
+import io.codurance.pouch.PouchApiApplication;
+import io.codurance.pouch.RestAssuredConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PouchApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-public class HealthCheckTests {
+public class HealthCheckFeature {
 
     @LocalServerPort
     private int serverPort;

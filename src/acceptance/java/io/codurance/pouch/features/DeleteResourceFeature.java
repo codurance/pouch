@@ -1,5 +1,8 @@
-package io.codurance.pouch;
+package io.codurance.pouch.features;
 
+import io.codurance.pouch.PouchApiApplication;
+import io.codurance.pouch.RestAssuredConfiguration;
+import io.codurance.pouch.database.DatabaseHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

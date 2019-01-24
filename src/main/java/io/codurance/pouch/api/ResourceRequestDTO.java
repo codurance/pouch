@@ -1,4 +1,4 @@
-package io.codurance.pouch;
+package io.codurance.pouch.api;
 
 public class ResourceRequestDTO {
 

@@ -1,5 +1,8 @@
 package io.codurance.pouch;
 
+import io.codurance.pouch.api.ResourceFavouriteController;
+import io.codurance.pouch.domain.Resource;
+import io.codurance.pouch.domain.ResourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,12 +11,10 @@ import java.util.Optional;
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.valueOf;
 

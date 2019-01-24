@@ -1,5 +1,10 @@
 package io.codurance.pouch;
 
+import io.codurance.pouch.api.ResourceController;
+import io.codurance.pouch.api.ResourceRequestDTO;
+import io.codurance.pouch.api.ResourceResponseDTO;
+import io.codurance.pouch.domain.Resource;
+import io.codurance.pouch.domain.ResourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,4 @@
-package io.codurance.pouch;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
+package io.codurance.pouch.domain;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,7 +15,7 @@ public class Resource extends Entity {
         super();
     }
 
-    Resource(UUID id, Instant added, String title, String url) {
+    public Resource(UUID id, Instant added, String title, String url) {
         super(id);
         this.added = added;
         this.title = title;

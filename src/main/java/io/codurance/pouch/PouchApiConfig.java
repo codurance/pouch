@@ -1,5 +1,6 @@
 package io.codurance.pouch;
 
+import io.codurance.pouch.domain.Entity;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;

@@ -1,6 +1,6 @@
-package io.codurance.pouch;
+package io.codurance.pouch.api;
 
-import org.springframework.data.annotation.Id;
+import io.codurance.pouch.domain.Resource;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class ResourceResponseDTO {
         // default constructor needed for JSON deserialization
     }
 
-    ResourceResponseDTO(UUID id, Instant added, String title, String url, boolean favourite) {
+    public ResourceResponseDTO(UUID id, Instant added, String title, String url, boolean favourite) {
         this.id = id;
         this.added = added;
         this.title = title;

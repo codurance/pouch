@@ -1,5 +1,7 @@
-package io.codurance.pouch;
+package io.codurance.pouch.api;
 
+import io.codurance.pouch.domain.Health;
+import io.codurance.pouch.domain.HealthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

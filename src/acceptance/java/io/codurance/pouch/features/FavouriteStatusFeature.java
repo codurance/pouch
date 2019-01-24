@@ -1,6 +1,8 @@
-package io.codurance.pouch;
+package io.codurance.pouch.features;
 
-import io.restassured.response.Response;
+import io.codurance.pouch.PouchApiApplication;
+import io.codurance.pouch.RestAssuredConfiguration;
+import io.codurance.pouch.database.DatabaseHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,14 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
-
 import static io.restassured.RestAssured.when;
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)

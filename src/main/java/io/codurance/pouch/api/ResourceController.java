@@ -1,5 +1,7 @@
-package io.codurance.pouch;
+package io.codurance.pouch.api;
 
+import io.codurance.pouch.domain.Resource;
+import io.codurance.pouch.domain.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +16,18 @@ import java.util.stream.StreamSupport;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
+public
 class ResourceController {
 
     private final ResourceRepository resourceRepository;
 
     @Autowired
-    ResourceController(ResourceRepository resourceRepository) {
+    public ResourceController(ResourceRepository resourceRepository) {
         this.resourceRepository = resourceRepository;
     }
 
     @GetMapping("/resources")
-    Iterable<ResourceResponseDTO> listAll() {
+    public Iterable<ResourceResponseDTO> listAll() {
         Iterable<Resource> allResources = resourceRepository.findAll();
         return StreamSupport.stream(allResources.spliterator(), false)
                 .map(ResourceResponseDTO::createResponseDTOFrom)
@@ -33,27 +36,27 @@ class ResourceController {
 
     @GetMapping("/resources/{id}")
     @ResponseBody
-    ResponseEntity<ResourceResponseDTO> getById(@PathVariable UUID id) {
+    public ResponseEntity<ResourceResponseDTO> getById(@PathVariable UUID id) {
         return resourceRepository.findById(id)
                 .map(resource -> ResponseEntity.ok(ResourceResponseDTO.createResponseDTOFrom(resource)))
                 .orElseGet(() -> ResponseEntity.status(NOT_FOUND).build());
     }
 
     @PostMapping("/resources")
-    ResponseEntity<ResourceResponseDTO> add(@RequestBody ResourceRequestDTO input) {
+    public ResponseEntity<ResourceResponseDTO> add(@RequestBody ResourceRequestDTO input) {
         var resource = resourceRepository.save(createResourceFrom(input));
         var response = ResourceResponseDTO.createResponseDTOFrom(resource);
         return new ResponseEntity<>(response, CREATED);
     }
 
     @DeleteMapping("/resources/{id}")
-    ResponseEntity<ResourceResponseDTO> remove(@PathVariable UUID id) {
+    public ResponseEntity<ResourceResponseDTO> remove(@PathVariable UUID id) {
         resourceRepository.deleteById(id);
         return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @PutMapping("/resources/{id}")
-    ResponseEntity<ResourceResponseDTO> updateById(@PathVariable UUID id, @RequestBody ResourceRequestDTO input) {
+    public ResponseEntity<ResourceResponseDTO> updateById(@PathVariable UUID id, @RequestBody ResourceRequestDTO input) {
         Optional<Resource> targetResource = resourceRepository.findById(id);
         if (!targetResource.isPresent()) {
             return ResponseEntity.status(NOT_FOUND).build();

@@ -1,4 +1,4 @@
-package io.codurance.pouch;
+package io.codurance.pouch.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;

@@ -1,8 +1,8 @@
-package io.codurance.pouch;
+package io.codurance.pouch.domain;
 
 import org.springframework.data.annotation.Id;
 
-class Health {
+public class Health {
 
     @Id
     private Integer id;

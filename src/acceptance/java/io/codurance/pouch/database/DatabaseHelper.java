@@ -1,15 +1,15 @@
-package io.codurance.pouch;
+package io.codurance.pouch.database;
 
 import java.sql.*;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-class DatabaseHelper {
+public class DatabaseHelper {
 
     private final Connection connection;
 
-    static final class Resource {
+    public static final class Resource {
 
         private UUID id;
         private Instant added;
@@ -21,11 +21,11 @@ class DatabaseHelper {
             // default constructor needed for JSON deserialization
         }
 
-        Resource(UUID id, Instant added, String title, String url) {
+        public Resource(UUID id, Instant added, String title, String url) {
             this(id, added, title, url, false);
         }
 
-        Resource(UUID id, Instant added, String title, String url, boolean favourite) {
+        public Resource(UUID id, Instant added, String title, String url, boolean favourite) {
             this.id = id;
             this.added = added;
             this.title = title;
@@ -89,7 +89,7 @@ class DatabaseHelper {
         }
     }
 
-    DatabaseHelper(String jdbcUrl) {
+    public DatabaseHelper(String jdbcUrl) {
         try {
             connection = DriverManager.getConnection(jdbcUrl, "postgres", "");
         } catch (SQLException e) {
@@ -98,7 +98,7 @@ class DatabaseHelper {
         }
     }
 
-    void clearResources() {
+    public void clearResources() {
         try (Statement statement = connection.createStatement()) {
             String sql = "DELETE FROM RESOURCE";
             statement.execute(sql);
@@ -108,7 +108,7 @@ class DatabaseHelper {
         }
     }
 
-    void insertResource(Resource resource) {
+    public void insertResource(Resource resource) {
         String sql = "INSERT INTO RESOURCE (ID, ADDED, TITLE, URL, FAVOURITE) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setObject(1, resource.getId());
@@ -123,7 +123,7 @@ class DatabaseHelper {
         }
     }
 
-    Optional<Resource> readResource(UUID uuid) {
+    public Optional<Resource> readResource(UUID uuid) {
         String sql = "SELECT ID, ADDED, TITLE, URL, FAVOURITE FROM RESOURCE WHERE ID = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setObject(1, uuid);

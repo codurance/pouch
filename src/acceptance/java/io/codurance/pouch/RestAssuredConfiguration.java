@@ -2,9 +2,9 @@ package io.codurance.pouch;
 
 import io.restassured.RestAssured;
 
-class RestAssuredConfiguration {
+public class RestAssuredConfiguration {
 
-    static void configure(int serverPort) {
+    public static void configure(int serverPort) {
         String port = System.getProperty("server.port");
         if (port == null) {
             RestAssured.port = serverPort;
