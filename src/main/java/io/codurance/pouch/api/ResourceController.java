@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -77,5 +78,13 @@ class ResourceController {
 
     private Resource createResourceFrom(ResourceRequestDTO resourceRequestDTO) {
         return new Resource(UUID.randomUUID(), Instant.now().truncatedTo(ChronoUnit.MILLIS), resourceRequestDTO.getTitle(), resourceRequestDTO.getUrl());
+    }
+
+    @GetMapping("/resources/")
+    public Iterable<ResourceResponseDTO> findByTitle(@RequestParam("title") String title) {
+        Iterable<Resource> resources = resourceRepository.findByTitle(title);
+        return StreamSupport.stream(resources.spliterator(), false)
+                .map(ResourceResponseDTO::createResponseDTOFrom)
+                .collect(Collectors.toList());
     }
 }
