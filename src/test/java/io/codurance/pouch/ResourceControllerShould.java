@@ -10,17 +10,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static java.time.Instant.*;
+import static java.time.Instant.now;
 import static java.util.Arrays.asList;
-import static java.util.UUID.*;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.valueOf;
 
 class ResourceControllerShould {
@@ -127,5 +125,18 @@ class ResourceControllerShould {
 
         assertThat(responseEntity.getStatusCode(), is(valueOf(SC_NOT_FOUND)));
         assertThat(responseEntity.getBody(), nullValue());
+    }
+
+    @Test
+    void return_one_specific_resource_specified_by_title() {
+        var randomUUID = randomUUID();
+        var currentTimestamp = now();
+        var resource = new Resource(randomUUID, currentTimestamp, "Home | The Met", "https://www.met.police.uk/");
+        when(resourceRepository.findByTitle(resource.getTitle())).thenReturn(asList(resource));
+
+        var responseList = asList(
+                new ResourceResponseDTO(randomUUID, currentTimestamp, "Home | The Met", "https://www.met.police.uk/", false));
+
+        assertThat(resourceController.findByTitle(resource.getTitle()), is(responseList));
     }
 }
